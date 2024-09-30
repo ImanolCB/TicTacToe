@@ -25,7 +25,7 @@ function App() {
   })
   const [winner, setWinner] = useState(() => {
     const winnerFromStorage = window.localStorage.getItem('winner')
-    return winnerFromStorage ?? TURNS.X
+    return winnerFromStorage ? null : winnerFromStorage
   }) //Null -> no hay ganador, False es empate
 
   
@@ -64,9 +64,9 @@ function App() {
     //Revisión si hay un ganador
     const newWinner = checkWinnerFrom(newBoard)
     if (newWinner) {
+      window.localStorage.setItem('winner', newWinner )
       confetti()
       setWinner(newWinner)
-      window.localStorage.setItem('winner', newWinner )
     } else if (checkEndGame(newBoard)){
       setWinner(false)
     }
