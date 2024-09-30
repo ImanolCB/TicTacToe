@@ -13,15 +13,29 @@ import { WinnerModal } from './components/WinnerModal.jsx'
 
 function App() {
 
-  const [board , setBoard] = useState(Array(9).fill(null))
-  const [turn , setTurn] = useState(TURNS.X)
-  const [winner, setWinner] = useState(null) //Null -> no hay ganador, False es empate
+  //Inicializacion del estado del board
+  const [board , setBoard] = useState(() => {
+    const boardFromStorage = window.localStorage.getItem('board')
+    return boardFromStorage ? JSON.parse(boardFromStorage) : Array(9).fill(null)
+  })
+  //Estados de Ganador y de Turnos
+  const [turn , setTurn] = useState(() => {
+    const turnFromStorage = window.localStorage.getItem('turn')
+    return turnFromStorage ?? TURNS.X
+  })
+  const [winner, setWinner] = useState(() => {
+    const winnerFromStorage = window.localStorage.getItem('winner')
+    return winnerFromStorage ?? TURNS.X
+  }) //Null -> no hay ganador, False es empate
 
   
   const resetGame = () => {
     setBoard(Array(9).fill(null))
     setTurn(TURNS.X)
     setWinner(null)
+
+    window.localStorage.removeItem('board')
+    window.localStorage.removeItem('turn')
   }
 
   const checkEndGame = (newBoard) => {
@@ -43,11 +57,16 @@ function App() {
     const newTurn = turn ===TURNS.X ? TURNS.O :TURNS.X
     setTurn(newTurn)
 
+    //Guardado de partida
+    window.localStorage.setItem('board', JSON.stringify(newBoard) )
+    window.localStorage.setItem('turn', newTurn )
+
     //Revisión si hay un ganador
     const newWinner = checkWinnerFrom(newBoard)
     if (newWinner) {
       confetti()
       setWinner(newWinner)
+      window.localStorage.setItem('winner', newWinner )
     } else if (checkEndGame(newBoard)){
       setWinner(false)
     }
