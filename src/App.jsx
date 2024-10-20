@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import confetti from 'canvas-confetti'
@@ -27,6 +27,10 @@ function App() {
     const winnerFromStorage = window.localStorage.getItem('winner')
     return winnerFromStorage ? null : winnerFromStorage
   }) //Null -> no hay ganador, False es empate
+
+  useEffect(() =>{
+    console.log("first")
+  },[winner])
 
   
   const resetGame = () => {
